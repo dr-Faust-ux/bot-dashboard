@@ -25,7 +25,7 @@ security = HTTPBasic()
 BASE_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
 STATIC_DIR = BASE_DIR / "static"
 TEMPLATES_DIR = BASE_DIR / "templates"
-LOGS_DIR = Path("/home/kaizer/Рабочий стол/Проекты/ковалев/fl-bots-master/logs")
+LOGS_DIR = BASE_DIR / "logs"
 
 # Создаем директории если их нет
 os.makedirs(STATIC_DIR, exist_ok=True)
@@ -236,9 +236,12 @@ async def get_logs(
 
 if __name__ == "__main__":
     import uvicorn
-    import os
-    port = int(os.environ.get("PORT", 8000))
-    print(f"Starting server on port {port}...")
+    print(f"Starting server...")
+    print(f"Static files directory: {STATIC_DIR}")
+    print(f"Templates directory: {TEMPLATES_DIR}")
     print(f"Logs directory: {LOGS_DIR}")
     print(f"Login: {ADMIN_USERNAME} / {ADMIN_PASSWORD}")
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    print(f"🚀 Server available at:")
+    print(f"   Local: http://localhost:8000")
+    print(f"   Network: http://YOUR_IP:8000")
+    uvicorn.run(app, host="0.0.0.0", port=8000)
