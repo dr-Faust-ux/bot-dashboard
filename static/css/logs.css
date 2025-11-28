@@ -1,0 +1,123 @@
+/* Logs Page Styles */
+.log-entry {
+    border-left: 4px solid #444;
+    transition: all 0.3s ease;
+}
+
+.log-entry:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    transform: translateX(2px);
+}
+
+.log-entry.info { border-left-color: #0dcaf0; }
+.log-entry.INFO { border-left-color: #198754; }
+.log-entry.WARNING { border-left-color: #ffc107; }
+.log-entry.ERROR { border-left-color: #dc3545; }
+.log-entry.CRITICAL { border-left-color: #6f42c1; }
+.log-entry.DEBUG { border-left-color: #6c757d; }
+
+.chart-container {
+    position: relative;
+    height: 250px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.table-responsive {
+    border-radius: 8px;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    border-bottom: 1px solid #444;
+    font-weight: 600;
+    color: #adb5bd;
+}
+
+.table td {
+    border-color: #333;
+    vertical-align: middle;
+}
+
+.badge {
+    font-size: 0.75em;
+    padding: 0.35em 0.65em;
+}
+
+.form-control, .form-select {
+    border: 1px solid #444;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    background: #1a1a1a;
+}
+
+.log-message {
+    word-break: break-word;
+}
+
+.metadata-content {
+    background: #1a1a1a !important;
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+
+/* Custom modal styles */
+.modal-content {
+    border: 1px solid #444;
+}
+
+.modal-header {
+    border-bottom: 1px solid #444;
+}
+
+.modal-footer {
+    border-top: 1px solid #444;
+}
+
+/* Filter section */
+.card .card-body {
+    padding: 1.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 200px;
+    }
+    
+    .filters .row > div {
+        margin-bottom: 1rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Animation for new log entries */
+@keyframes highlight {
+    0% { background: rgba(255, 255, 255, 0.1); }
+    100% { background: transparent; }
+}
+
+.log-entry.highlight {
+    animation: highlight 2s ease;
+}

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Логи ботов - Bot Dashboard</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Highlight.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    
+    <!-- Vis.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/vis-network/dist/dist/vis-network.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/logs.css">
+</head>
+<body class="bg-dark text-light">
+    <!-- Навбар -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="bi bi-robot"></i> Bot Dashboard
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text">
+                    <i class="bi bi-person-circle"></i> {{ username }}
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Хлебные крошки -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Главная</a></li>
+                <li class="breadcrumb-item active text-light">Логи</li>
+            </ol>
+        </nav>
+
+        <!-- Графики -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card bg-dark border-secondary">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-pie-chart me-2"></i> Распределение логов по уровням
+                        </h5>
+                        <div class="chart-container">
+                            <canvas id="levelChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-dark border-secondary">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-graph-up me-2"></i> Активность логов по времени
+                        </h5>
+                        <div class="chart-container">
+                            <canvas id="timeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Фильтры -->
+        <div class="card bg-dark border-secondary mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">
+                    <i class="bi bi-funnel me-2"></i> Фильтры
+                </h5>
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <label class="form-label">Уровень лога</label>
+                        <select class="form-select bg-dark text-light border-secondary" id="levelFilter">
+                            <option value="">Все уровни</option>
+                            <option value="DEBUG">DEBUG</option>
+                            <option value="INFO">INFO</option>
+                            <option value="WARNING">WARNING</option>
+                            <option value="ERROR">ERROR</option>
+                            <option value="CRITICAL">CRITICAL</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Файл лога</label>
+                        <select class="form-select bg-dark text-light border-secondary" id="fileFilter">
+                            <option value="">Все файлы</option>
+                            {% for file in files %}
+                            <option value="{{ file }}">{{ file }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Ключ метаданных</label>
+                        <input type="text" class="form-control bg-dark text-light border-secondary" id="metadataKeyFilter" placeholder="Например: user_id">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Значение метаданных</label>
+                        <input type="text" class="form-control bg-dark text-light border-secondary" id="metadataValueFilter" placeholder="Например: 123">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Начальная дата</label>
+                        <input type="date" class="form-control bg-dark text-light border-secondary" id="startDate">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Конечная дата</label>
+                        <input type="date" class="form-control bg-dark text-light border-secondary" id="endDate">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <button class="btn btn-primary" id="applyFilters">
+                            <i class="bi bi-funnel-fill me-1"></i> Применить фильтры
+                        </button>
+                        <button class="btn btn-outline-secondary" id="resetFilters">
+                            <i class="bi bi-x-circle me-1"></i> Сбросить фильтры
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Таблица логов -->
+        <div class="card bg-dark border-secondary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-list-ul me-2"></i> Записи логов
+                    </h5>
+                    <div class="text-muted small">
+                        Всего записей: {{ logs|length }}
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover" id="logsTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <i class="bi bi-clock me-1"></i> Время
+                                </th>
+                                <th>
+                                    <i class="bi bi-exclamation-triangle me-1"></i> Уровень
+                                </th>
+                                <th>
+                                    <i class="bi bi-code-square me-1"></i> Компонент
+                                </th>
+                                <th>
+                                    <i class="bi bi-chat-text me-1"></i> Сообщение
+                                </th>
+                                <th>
+                                    <i class="bi bi-file-text me-1"></i> Файл
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in logs %}
+                            <tr class="log-entry {{ log.level | lower }}">
+                                <td class="text-muted">{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>
+                                    <span class="badge {{ log.level | level_class }}">
+                                        {{ log.level }}
+                                    </span>
+                                </td>
+                                <td>{{ log.name }}</td>
+                                <td>
+                                    <span class="log-message">{{ log.message }}</span>
+                                    {% if log.metadata %}
+                                    <button class="btn btn-sm btn-outline-info ms-2" 
+                                            onclick='toggleMetadata(this, {{ log.metadata | tojson | safe }})'
+                                            title="Показать/скрыть метаданные">
+                                        <i class="bi bi-info-circle"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                                <td class="text-muted">{{ log.file }}</td>
+                            </tr>
+                            {% if log.metadata %}
+                            <tr class="metadata-row d-none">
+                                <td colspan="5">
+                                    <div class="p-3 bg-dark border-start border-info border-3">
+                                        <h6 class="mb-2 text-info">Метаданные:</h6>
+                                        <pre class="mb-0"><code class="metadata-content language-json"></code></pre>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно для графа -->
+    <div class="modal fade" id="userFlowModal" tabindex="-1" data-bs-theme="dark">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content bg-dark text-light border-secondary">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title">Граф действий пользователя</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="userFlowGraph" style="height: 600px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    
+    <!-- Vis.js -->
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="/static/js/charts.js"></script>
+    <script src="/static/js/userflow.js"></script>
+    <script src="/static/js/filters.js"></script>
+    
+    <!-- Инициализация -->
+    <script>
+        // Начальная статистика
+        const statistics = {{ statistics | tojson | safe }};
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts(statistics);
+            hljs.highlightAll();
+        });
+    </script>
+</body>
+</html>

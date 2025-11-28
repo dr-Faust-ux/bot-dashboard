@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Dashboard</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body class="bg-dark text-light">
+    <!-- Навбар -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="bi bi-robot"></i> Bot Dashboard
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text">
+                    <i class="bi bi-person-circle"></i> {{ username }}
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Боковая панель -->
+            <div class="col-lg-2 col-md-3 mb-4">
+                <div class="card bg-dark border-secondary">
+                    <div class="card-body">
+                        <h6 class="card-title text-muted mb-3">НАВИГАЦИЯ</h6>
+                        <div class="nav flex-column">
+                            <a href="/" class="nav-link active mb-2">
+                                <i class="bi bi-speedometer2 me-2"></i>Дашборд
+                            </a>
+                            <a href="/logs" class="nav-link mb-2">
+                                <i class="bi bi-journal-text me-2"></i>Логи
+                            </a>
+                            <a href="#" class="nav-link mb-2 text-muted" onclick="showComingSoon()">
+                                <i class="bi bi-graph-up me-2"></i>Статистика
+                            </a>
+                            <a href="#" class="nav-link mb-2 text-muted" onclick="showComingSoon()">
+                                <i class="bi bi-gear me-2"></i>Настройки
+                            </a>
+                            <a href="#" class="nav-link mb-2 text-muted" onclick="showComingSoon()">
+                                <i class="bi bi-sliders me-2"></i>Управление
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Основная область -->
+            <div class="col-lg-10 col-md-9">
+                <!-- Статус ботов -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card bg-dark border-secondary">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-activity me-2"></i>Статус ботов
+                                </h5>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card bg-success bg-opacity-25 border-success">
+                                            <div class="card-body text-center">
+                                                <i class="bi bi-play-circle fs-1 text-success"></i>
+                                                <h6 class="mt-2">Бот #1</h6>
+                                                <span class="badge bg-success">Online</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card bg-success bg-opacity-25 border-success">
+                                            <div class="card-body text-center">
+                                                <i class="bi bi-play-circle fs-1 text-success"></i>
+                                                <h6 class="mt-2">Бот #2</h6>
+                                                <span class="badge bg-success">Online</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card bg-success bg-opacity-25 border-success">
+                                            <div class="card-body text-center">
+                                                <i class="bi bi-play-circle fs-1 text-success"></i>
+                                                <h6 class="mt-2">Бот #3</h6>
+                                                <span class="badge bg-success">Online</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card bg-secondary bg-opacity-25 border-secondary">
+                                            <div class="card-body text-center">
+                                                <i class="bi bi-plus-circle fs-1 text-secondary"></i>
+                                                <h6 class="mt-2">Новый бот</h6>
+                                                <span class="badge bg-secondary">Добавить</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Быстрые действия -->
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card bg-dark border-secondary h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-lightning me-2"></i>Быстрые действия
+                                </h5>
+                                <div class="d-grid gap-2">
+                                    <a href="/logs" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-journal-text me-2"></i>Просмотр логов
+                                    </a>
+                                    <button class="btn btn-outline-warning" onclick="showComingSoon()">
+                                        <i class="bi bi-arrow-repeat me-2"></i>Перезапустить всех ботов
+                                    </button>
+                                    <button class="btn btn-outline-info" onclick="showComingSoon()">
+                                        <i class="bi bi-download me-2"></i>Экспорт логов
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="card bg-dark border-secondary h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-bar-chart me-2"></i>Статистика
+                                </h5>
+                                <div class="row text-center">
+                                    <div class="col-6 mb-3">
+                                        <div class="border rounded p-3 bg-dark">
+                                            <i class="bi bi-chat-text fs-1 text-info"></i>
+                                            <h4 class="mt-2">1,234</h4>
+                                            <small class="text-muted">Логов сегодня</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <div class="border rounded p-3 bg-dark">
+                                            <i class="bi bi-exclamation-triangle fs-1 text-warning"></i>
+                                            <h4 class="mt-2">23</h4>
+                                            <small class="text-muted">Ошибок</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Последние события -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card bg-dark border-secondary">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-clock-history me-2"></i>Последние события
+                                </h5>
+                                <div class="list-group list-group-flush">
+                                    <div class="list-group-item bg-dark text-light border-secondary">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <small class="text-success">INFO</small>
+                                            <small class="text-muted">2 мин назад</small>
+                                        </div>
+                                        <p class="mb-1">Бот #1 успешно завершил задачу</p>
+                                    </div>
+                                    <div class="list-group-item bg-dark text-light border-secondary">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <small class="text-warning">WARNING</small>
+                                            <small class="text-muted">5 мин назад</small>
+                                        </div>
+                                        <p class="mb-1">Бот #2: Высокая загрузка памяти</p>
+                                    </div>
+                                    <div class="list-group-item bg-dark text-light border-secondary">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <small class="text-info">DEBUG</small>
+                                            <small class="text-muted">10 мин назад</small>
+                                        </div>
+                                        <p class="mb-1">Бот #3: Начата обработка запроса</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        function showComingSoon() {
+            alert('Функция в разработке! 🚧\nСледите за обновлениями.');
+        }
+
+        // Активация текущей страницы в навигации
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname;
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
